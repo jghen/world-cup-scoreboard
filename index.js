@@ -18,11 +18,11 @@ class Match {
   }
 
   getHomeTeam () {
-    return this.getHomeTeam;
+    return this.homeTeam;
   }
 
   getAwayTeam () {
-    return this.getAwayTeam;
+    return this.awayTeam;
   }
 
 
