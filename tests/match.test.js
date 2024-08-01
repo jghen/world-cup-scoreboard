@@ -22,6 +22,7 @@ describe('Match Class', () => {
     expect(match.getScoreAsString()).toBe('1 - 2');
 
     match.endGame();
-    expect(match.getScoreAsString()).toBe('1 - 2');
+    expect(match.getScoreAsObject()).toEqual({home:1, away: 2});
   });
+
 });
