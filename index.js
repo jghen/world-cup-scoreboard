@@ -83,13 +83,30 @@ class Score {
     return this.#score;
   }
 
-  update(homeScore, awayScore) {
-    this.#score = { home: homeScore, away: awayScore };
+  update(newHomeScore, newAwayScore) {
+    this.#score = { home: newHomeScore, away: newAwayScore };
   }
 }
 
 class MatchManager {
-  constructor () {}
+  #matches;
+
+  constructor() {
+    this.#matches = [];
+  }
+
+  startGame(homeTeam, awayTeam) {
+    const match = new Match(homeTeam, awayTeam);
+    match.startGame();
+    this.#matches.push(match);
+    return match;
+  }
+
+  getMatches() {
+    console.info('Current matches:', this.#matches[0].getHomeTeam().getName());
+    return this.#matches;
+  }
+
 }
 
 module.exports = {
