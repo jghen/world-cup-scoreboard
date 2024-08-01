@@ -13,4 +13,15 @@ describe('Match Class', () => {
     expect(match.getHomeTeam().getName()).toBe('Brazil');
     expect(match.getAwayTeam().getName()).toBe('Argentina');
   });
+
+  test('should start and end a match', () => {
+    match.startGame();
+    expect(match.getScoreAsString()).toBe('0 - 0');
+
+    match.updateScore(1, 2);
+    expect(match.getScoreAsString()).toBe('1 - 2');
+
+    match.endGame();
+    expect(match.getScoreAsString()).toBe('1 - 2');
+  });
 });
