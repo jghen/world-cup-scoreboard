@@ -1,10 +1,12 @@
 class Team {
+  #name;
+
   constructor(name) {
-    this.name = name;
+    this.#name = name;
   }
 
   getName() {
-    return this.name;
+    return this.#name;
   }
 }
 
@@ -54,7 +56,7 @@ class Match {
   updateScore(homeScore, awayScore) {
     if (this.hasStarted && !this.hasEnded) {
       this.score.update(homeScore, awayScore);
-      
+
     } else {
       console.error( "Cannot update score: Game has not started or has already ended." );
     }
@@ -62,20 +64,22 @@ class Match {
 }
 
 class Score {
+  #score;
+  
   constructor() {
-    this._score = { home: 0, away: 0 };
+    this.#score = { home: 0, away: 0 };
   }
 
   asString() {
-    return `${this._score.home} - ${this._score.away}`;
+    return `${this.#score.home} - ${this.#score.away}`;
   }
 
   asObject() {
-    return this._score;
+    return this.#score;
   }
 
   update(homeScore, awayScore) {
-    this._score = { home: homeScore, away: awayScore };
+    this.#score = { home: homeScore, away: awayScore };
   }
 }
 
