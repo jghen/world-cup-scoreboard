@@ -83,8 +83,8 @@ class Score {
     return this.#score;
   }
 
-  update(newHomeScore, newAwayScore) {
-    this.#score = { home: newHomeScore, away: newAwayScore };
+  update(homeScore, awayScore) {
+    this.#score = { home: homeScore, away: awayScore };
   }
 }
 
@@ -103,10 +103,8 @@ class MatchManager {
   }
 
   getMatches() {
-    console.info('Current matches:', this.#matches[0].getHomeTeam().getName());
     return this.#matches;
   }
-
 }
 
 module.exports = {

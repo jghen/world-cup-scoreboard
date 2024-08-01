@@ -7,29 +7,35 @@ async function simulateGame() {
   const team2 = new Team("Sweden");
 
   await timeout(1000);
-  
+
   const match = manager.startGame(team1, team2);
-  const homeTeam = match.getHomeTeam();
-  const awayTeam = match.getAwayTeam();
-  
+
+  await timeout(2000);
+  console.log( "\nOngoing matches:", manager
+      .getMatches()
+      .map((m) => m.getHomeTeam().getName() + " - " + m.getAwayTeam().getName())
+  );
+
   await timeout(2000);
   console.log("\nScore is: ", match.getScoreAsString());
 
   await timeout(2000);
   match.updateScore(1, 0);
   console.log("\nScore after update: ", match.getScoreAsString());
-  
+
   await timeout(2000);
-  let scoreAsObj = match.getScoreAsObject();
-  console.log(`\n--Half time-- \n${homeTeam.getName()}: ${scoreAsObj.home}\n${awayTeam.getName()}: ${scoreAsObj.away} \n-------------`);
-  
+  console.log(`\nHalf time: ${match.getScoreAsString()}\n`);
+
   await timeout(2000);
   match.endGame();
-  
-  await timeout(2000)
-  console.log("\Final score: ", match.getScoreAsString());
-  
+
   await timeout(2000);
+  const scoreAsObj = match.getScoreAsObject();
+  console.log( `\n--Game end-- \n${team1.getName()}: ${ scoreAsObj.home }\n${team2.getName()}: ${scoreAsObj.away} \n-------------\n` );
+
+  await timeout(1000);
+
+  console.log('Thank you for watching!')
 }
 
 simulateGame().catch(console.error);
