@@ -12,28 +12,45 @@ class Match {
   constructor(homeTeam, awayTeam) {
     this.homeTeam = homeTeam;
     this.awayTeam = awayTeam;
-    this.homeScore = 0;
-    this.awayScore = 0;
-    
+    this.score = new Score();
+    this.hasStarted = false;
+    this.hasEnded = false;
   }
 
-  getHomeTeam () {
+  getHomeTeam() {
     return this.homeTeam;
   }
 
-  getAwayTeam () {
+  getAwayTeam() {
     return this.awayTeam;
   }
 
+  getScoreAsString() {
+    return this.score.asString();
+  }
 
+  getScoreAsObject ( ) {
+    return this.score.asObject();
+  }
 }
 
 class Score {
-  
+  constructor() {
+    this._score = { home: 0, away: 0 };
+  }
 
+
+  asString() {
+    return `${this._score.home} - ${this._score.away}`
+  }
+
+  asObject () {
+    return this._score;
+  }
 }
-
 
 module.exports = {
-  Team, Match, Score
-}
+  Team,
+  Match,
+  Score,
+};
