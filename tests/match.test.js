@@ -22,7 +22,46 @@ describe('Match Class', () => {
     expect(match.getScoreAsString()).toBe('1 - 2');
 
     match.endGame();
-    expect(match.getScoreAsObject()).toEqual({home:1, away: 2});
+    expect(match.getScoreAsObject()).toEqual({ home: 1, away: 2 });
   });
 
+  test('should increment home score by 1', () => {
+    match.startGame();
+    match.incrementHomeScore();
+    expect(match.getScoreAsString()).toBe('1 - 0');
+  });
+
+  test('should increment away score by 1', () => {
+    match.startGame();
+    match.incrementAwayScore();
+    expect(match.getScoreAsString()).toBe('0 - 1');
+  });
+
+  test('should handle updating scores directly and incrementing', () => {
+    match.startGame();
+    match.updateScore(2, 3);
+    expect(match.getScoreAsString()).toBe('2 - 3');
+    
+    match.incrementHomeScore();
+    expect(match.getScoreAsString()).toBe('3 - 3');
+    
+    match.incrementAwayScore();
+    expect(match.getScoreAsString()).toBe('3 - 4');
+  });
+
+  test('should not allow score updates if the game has not started', () => {
+    expect(() => match.updateScore(4, 5)).toThrow(Error);
+  });
+
+  test('should not allow score updates if the game has ended', () => {
+    match.startGame();
+    match.endGame();
+    expect(() => match.updateScore(4, 5)).toThrow(Error);
+  });
+
+  test('should throw an error if negative scores are provided', () => {
+    match.startGame();
+    expect(() => match.updateScore(-1, 0)).toThrow("Scores cannot be negative");
+    expect(() => match.updateScore(0, -1)).toThrow("Scores cannot be negative");
+  });
 });

@@ -47,22 +47,32 @@ class Match {
     }
   }
 
-  updateHomeScore(score) {
+  updateScore(homeScore, awayScore) {
+    if (!this.#hasStarted || this.#hasEnded) {
+      throw new Error("Cannot update score: Game has not started or has already ended.");
+    }
+    if (homeScore < 0 || awayScore < 0) {
+      throw new Error("Scores cannot be negative");
+    }
+    this.#score.update(homeScore, awayScore);
+  }
+
+  incrementHomeScore() {
     if (this.#hasStarted && !this.#hasEnded) {
-      this.#score.updateHome(score);
+      this.#score.incrementHome();
       return true;
     } else {
-      console.error("Cannot update score: Game has not started or has already ended.");
+      console.error("Cannot increment score: Game has not started or has already ended.");
       return false;
     }
   }
 
-  updateAwayScore(score) {
+  incrementAwayScore() {
     if (this.#hasStarted && !this.#hasEnded) {
-      this.#score.updateAway(score);
+      this.#score.incrementAway();
       return true;
     } else {
-      console.error("Cannot update score: Game has not started or has already ended.");
+      console.error("Cannot increment score: Game has not started or has already ended.");
       return false;
     }
   }
@@ -107,12 +117,20 @@ class Score {
     return this.#score;
   }
 
-  updateHome(homeScore) {
+  update(homeScore, awayScore) {
+    if (homeScore < 0 || awayScore < 0) {
+      throw new Error("Scores cannot be negative");
+    }
     this.#score.home = homeScore;
+    this.#score.away = awayScore;
   }
 
-  updateAway(awayScore) {
-    this.#score.away = awayScore;
+  incrementHome() {
+    this.#score.home += 1;
+  }
+
+  incrementAway() {
+    this.#score.away += 1;
   }
 }
 
