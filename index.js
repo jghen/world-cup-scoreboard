@@ -1,14 +1,25 @@
 class Team {
   #name;
+  #isPlaying;
 
   constructor(name) {
     this.#name = name;
+    this.#isPlaying = false; // Track if the team is currently playing in a match
   }
 
   getName() {
     return this.#name;
   }
+
+  setPlaying(status) {
+    this.#isPlaying = status;
+  }
+
+  isPlaying() {
+    return this.#isPlaying;
+  }
 }
+
 
 class Match {
   #homeTeam;
@@ -16,6 +27,7 @@ class Match {
   #score;
   #hasStarted;
   #hasEnded;
+  #timeStarted;
 
   constructor(homeTeam, awayTeam) {
     this.#homeTeam = homeTeam;
@@ -23,12 +35,15 @@ class Match {
     this.#score = new Score();
     this.#hasStarted = false;
     this.#hasEnded = false;
+    this.#timeStarted = new Date();
   }
 
   startGame() {
     if (!this.#hasStarted) {
       this.#hasStarted = true;
-      console.log(`Game started: ${this.#homeTeam.getName()} vs ${this.#awayTeam.getName()}`);
+      console.log(
+        `Game started: ${this.#homeTeam.getName()} vs ${this.#awayTeam.getName()}`
+      );
       return true;
     } else {
       console.error("Game has already started.");
@@ -39,7 +54,9 @@ class Match {
   endGame() {
     if (this.#hasStarted && !this.#hasEnded) {
       this.#hasEnded = true;
-      console.log(`Game ended: ${this.#homeTeam.getName()} vs ${this.#awayTeam.getName()}`);
+      console.log(
+        `Game ended: ${this.#homeTeam.getName()} vs ${this.#awayTeam.getName()}`
+      );
       return true;
     } else {
       console.error("Game has not started or has already ended.");
@@ -49,7 +66,9 @@ class Match {
 
   updateScore(homeScore, awayScore) {
     if (!this.#hasStarted || this.#hasEnded) {
-      throw new Error("Cannot update score: Game has not started or has already ended.");
+      throw new Error(
+        "Cannot update score: Game has not started or has already ended."
+      );
     }
     if (homeScore < 0 || awayScore < 0) {
       throw new Error("Scores cannot be negative");
@@ -58,23 +77,21 @@ class Match {
   }
 
   incrementHomeScore() {
-    if (this.#hasStarted && !this.#hasEnded) {
-      this.#score.incrementHome();
-      return true;
-    } else {
-      console.error("Cannot increment score: Game has not started or has already ended.");
-      return false;
+    if (!this.#hasStarted || this.#hasEnded) {
+      throw new Error(
+        "Cannot increment score: Game has not started or has already ended."
+      );
     }
+    this.#score.incrementHome();
   }
 
   incrementAwayScore() {
-    if (this.#hasStarted && !this.#hasEnded) {
-      this.#score.incrementAway();
-      return true;
-    } else {
-      console.error("Cannot increment score: Game has not started or has already ended.");
-      return false;
+    if (!this.#hasStarted || this.#hasEnded) {
+      throw new Error(
+        "Cannot increment score: Game has not started or has already ended."
+      );
     }
+    this.#score.incrementAway();
   }
 
   getScoreAsString() {
@@ -92,14 +109,15 @@ class Match {
   getAwayTeam() {
     return this.#awayTeam;
   }
-  
+
   hasStarted() {
     return this.#hasStarted;
   }
-  
+
   hasEnded() {
     return this.#hasEnded;
   }
+
   getWinner() {
     if (!this.#hasEnded) {
       throw new Error("Cannot determine winner: Game has not ended.");
@@ -111,9 +129,17 @@ class Match {
     } else if (away > home) {
       return this.#awayTeam.getName();
     } else {
-      return 'Draw'; // Return 'Draw' if the scores are equal
+      return "Draw";
     }
   }
+
+  getTimeStarted() {
+    return this.#timeStarted;
+  }
+  showInfo() {
+    return `${this.#homeTeam.getName()} ${this.getScoreAsString()} ${this.#awayTeam.getName()}`;
+  }
+  
 }
 
 class Score {
@@ -156,26 +182,65 @@ class MatchManager {
   }
 
   startGame(homeTeam, awayTeam) {
+    if (homeTeam.isPlaying() || awayTeam.isPlaying()) {
+      console.error("One or both teams are already in a match.");
+      return null;
+    }
+
     const match = new Match(homeTeam, awayTeam);
     const hasStarted = match.startGame();
     if (hasStarted) {
       this.#matches.push(match);
+      homeTeam.setPlaying(true);
+      awayTeam.setPlaying(true);
+      console.log('Match added:', match);
       return match;
     }
+    return null;
   }
 
   endGame(match) {
     const hasEnded = match.endGame();
     if (hasEnded) {
       this.#matches = this.#matches.filter(m => m !== match);
+      match.getHomeTeam().setPlaying(false);
+      match.getAwayTeam().setPlaying(false);
+      console.log('Match removed:', match);
       return match;
     }
+    return null;
   }
 
   getMatches() {
+    console.log('Current matches:', this.#matches.map(m => m.showInfo()));
     return this.#matches;
   }
+
+
+  getSummary() {
+    console.log('Matches before sorting:', this.#matches.map(m => m.showInfo()));
+
+    const sortedMatches = [...this.#matches].sort((a, b) => {
+      const scoreA = a.getScoreAsObject().home + a.getScoreAsObject().away;
+      const scoreB = b.getScoreAsObject().home + b.getScoreAsObject().away;
+
+      if (scoreB !== scoreA) {
+        return scoreB - scoreA;
+      }
+      console.log('----sorting time!!! - ---')
+      return a.getTimeStarted() - b.getTimeStarted();
+    });
+
+    console.log('Sorted matches:', sortedMatches.map(match => match.showInfo()));
+
+    return sortedMatches.map(match => match.showInfo());
+  }
 }
+
+
+
+
+
 
 module.exports = {
   Team,
