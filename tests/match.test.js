@@ -64,4 +64,30 @@ describe('Match Class', () => {
     expect(() => match.updateScore(-1, 0)).toThrow("Scores cannot be negative");
     expect(() => match.updateScore(0, -1)).toThrow("Scores cannot be negative");
   });
+
+  test('should throw an error if getWinner is called before the match has ended', () => {
+    match.startGame();
+    expect(() => match.getWinner()).toThrow("Cannot determine winner: Game has not ended.");
+  });
+
+  test('should return the home team as winner if home score is higher', () => {
+    match.startGame();
+    match.updateScore(3, 2);
+    match.endGame();
+    expect(match.getWinner()).toBe('Brazil');
+  });
+
+  test('should return the away team as winner if away score is higher', () => {
+    match.startGame();
+    match.updateScore(2, 3);
+    match.endGame();
+    expect(match.getWinner()).toBe('Argentina');
+  });
+
+  test('should return "Draw" if scores are equal', () => {
+    match.startGame();
+    match.updateScore(2, 2);
+    match.endGame();
+    expect(match.getWinner()).toBe('Draw');
+  });
 });

@@ -1,5 +1,5 @@
 const { MatchManager, Team } = require("./index");
-const { timeout } = require("./utils");
+const { timeout, incrementRandomScore } = require("./utils");
 const { teams } = require("./teams");
 const TeamsService = require("./teamsService");
 const teamsService = new TeamsService(teams);

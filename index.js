@@ -100,6 +100,20 @@ class Match {
   hasEnded() {
     return this.#hasEnded;
   }
+  getWinner() {
+    if (!this.#hasEnded) {
+      throw new Error("Cannot determine winner: Game has not ended.");
+    }
+
+    const { home, away } = this.#score.asObject();
+    if (home > away) {
+      return this.#homeTeam.getName();
+    } else if (away > home) {
+      return this.#awayTeam.getName();
+    } else {
+      return 'Draw'; // Return 'Draw' if the scores are equal
+    }
+  }
 }
 
 class Score {
