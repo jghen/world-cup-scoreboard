@@ -28,7 +28,7 @@ class Match {
   startGame() {
     if (!this.#hasStarted) {
       this.#hasStarted = true;
-      console.log( `Game started: ${this.#homeTeam.getName()} vs ${this.#awayTeam.getName()}` );
+      console.log(`Game started: ${this.#homeTeam.getName()} vs ${this.#awayTeam.getName()}`);
       return true;
     } else {
       console.error("Game has already started.");
@@ -39,19 +39,30 @@ class Match {
   endGame() {
     if (this.#hasStarted && !this.#hasEnded) {
       this.#hasEnded = true;
-      console.log( `Game ended: ${this.#homeTeam.getName()} vs ${this.#awayTeam.getName()}` );
+      console.log(`Game ended: ${this.#homeTeam.getName()} vs ${this.#awayTeam.getName()}`);
       return true;
     } else {
       console.error("Game has not started or has already ended.");
+      return false;
     }
   }
 
-  updateScore(homeScore, awayScore) {
+  updateHomeScore(score) {
     if (this.#hasStarted && !this.#hasEnded) {
-      this.#score.update(homeScore, awayScore);
+      this.#score.updateHome(score);
       return true;
     } else {
-      console.error( "Cannot update score: Game has not started or has already ended." );
+      console.error("Cannot update score: Game has not started or has already ended.");
+      return false;
+    }
+  }
+
+  updateAwayScore(score) {
+    if (this.#hasStarted && !this.#hasEnded) {
+      this.#score.updateAway(score);
+      return true;
+    } else {
+      console.error("Cannot update score: Game has not started or has already ended.");
       return false;
     }
   }
@@ -71,9 +82,11 @@ class Match {
   getAwayTeam() {
     return this.#awayTeam;
   }
+  
   hasStarted() {
     return this.#hasStarted;
   }
+  
   hasEnded() {
     return this.#hasEnded;
   }
@@ -94,8 +107,12 @@ class Score {
     return this.#score;
   }
 
-  update(homeScore, awayScore) {
-    this.#score = { home: homeScore, away: awayScore };
+  updateHome(homeScore) {
+    this.#score.home = homeScore;
+  }
+
+  updateAway(awayScore) {
+    this.#score.away = awayScore;
   }
 }
 
@@ -118,7 +135,7 @@ class MatchManager {
   endGame(match) {
     const hasEnded = match.endGame();
     if (hasEnded) {
-      this.#matches.pop();
+      this.#matches = this.#matches.filter(m => m !== match);
       return match;
     }
   }

@@ -1,22 +1,23 @@
 const { MatchManager, Team } = require("./index");
 const { timeout } = require("./utils");
-const {teams} = require("./teams");
-const TeamsService = require('./teamsService');
+const { teams } = require("./teams");
+const TeamsService = require("./teamsService");
 const teamsService = new TeamsService(teams);
 
 async function simulateGames() {
-  
-  
+  const [team1Name, team2Name] = teamsService.getTwoRandomTeams();
   const manager = new MatchManager();
-  const team1 = new Team(teamsService.getRandomTeam());
-  const team2 = new Team(teamsService.getRandomTeam());
+  const team1 = new Team(team1Name);
+  const team2 = new Team(team2Name);
 
   await timeout(1000);
 
   const match = manager.startGame(team1, team2);
 
   await timeout(2000);
-  console.log( "\nOngoing matches:", manager
+  console.log(
+    "\nOngoing matches:",
+    manager
       .getMatches()
       .map((m) => m.getHomeTeam().getName() + " - " + m.getAwayTeam().getName())
   );
@@ -25,8 +26,12 @@ async function simulateGames() {
   console.log("\nScore is: ", match.getScoreAsString());
 
   await timeout(2000);
-  match.updateScore(1, 0);
-  console.log("\nScore after update: ", match.getScoreAsString());
+  match.updateHomeScore(1);
+  console.log(`\nNew goal for ${match.getHomeTeam().getName()}: `, match.getScoreAsString());
+
+  await timeout(2000);
+  match.updateAwayScore(1);
+  console.log(`\nNew goal for ${match.getAwayTeam().getName()}: `, match.getScoreAsString());
 
   await timeout(2000);
   console.log(`\nHalf time: ${match.getScoreAsString()}\n`);
@@ -36,7 +41,7 @@ async function simulateGames() {
 
   await timeout(2000);
   const scoreAsObj = match.getScoreAsObject();
-  console.log( `\n--Game end-- \n${team1.getName()}: ${ scoreAsObj.home }\n${team2.getName()}: ${scoreAsObj.away} \n-------------\n` );
+  console.log(`\n--Game end-- \n${team1.getName()}: ${scoreAsObj.home}\n${team2.getName()}: ${scoreAsObj.away} \n-------------\n`);
 
   await timeout(1000);
 
