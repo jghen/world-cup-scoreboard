@@ -28,26 +28,31 @@ class Match {
   startGame() {
     if (!this.#hasStarted) {
       this.#hasStarted = true;
-      console.log(`Game started: ${this.#homeTeam.getName()} vs ${this.#awayTeam.getName()}`);
+      console.log( `Game started: ${this.#homeTeam.getName()} vs ${this.#awayTeam.getName()}` );
+      return true;
     } else {
-      console.error('Game has already started.');
+      console.error("Game has already started.");
+      return false;
     }
   }
 
   endGame() {
     if (this.#hasStarted && !this.#hasEnded) {
       this.#hasEnded = true;
-      console.log(`Game ended: ${this.#homeTeam.getName()} vs ${this.#awayTeam.getName()}`);
+      console.log( `Game ended: ${this.#homeTeam.getName()} vs ${this.#awayTeam.getName()}` );
+      return true;
     } else {
-      console.error('Game has not started or has already ended.');
+      console.error("Game has not started or has already ended.");
     }
   }
 
   updateScore(homeScore, awayScore) {
     if (this.#hasStarted && !this.#hasEnded) {
       this.#score.update(homeScore, awayScore);
+      return true;
     } else {
-      console.error('Cannot update score: Game has not started or has already ended.');
+      console.error( "Cannot update score: Game has not started or has already ended." );
+      return false;
     }
   }
 
@@ -65,6 +70,12 @@ class Match {
 
   getAwayTeam() {
     return this.#awayTeam;
+  }
+  hasStarted() {
+    return this.#hasStarted;
+  }
+  hasEnded() {
+    return this.#hasEnded;
   }
 }
 
@@ -97,9 +108,19 @@ class MatchManager {
 
   startGame(homeTeam, awayTeam) {
     const match = new Match(homeTeam, awayTeam);
-    match.startGame();
-    this.#matches.push(match);
-    return match;
+    const hasStarted = match.startGame();
+    if (hasStarted) {
+      this.#matches.push(match);
+      return match;
+    }
+  }
+
+  endGame(match) {
+    const hasEnded = match.endGame();
+    if (hasEnded) {
+      this.#matches.pop();
+      return match;
+    }
   }
 
   getMatches() {
@@ -111,5 +132,5 @@ module.exports = {
   Team,
   Match,
   Score,
-  MatchManager
+  MatchManager,
 };

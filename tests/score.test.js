@@ -1,4 +1,4 @@
-const Score = require('../index.js').Score;
+const {Score} = require('../index.js');
 
 describe('Score Class', () => {
   test('should initialize with 0-0 score', () => {

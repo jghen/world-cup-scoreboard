@@ -1,5 +1,5 @@
 // tests/matchManager.test.js
-const { MatchManager, Team } = require('../index');
+const { MatchManager, Team } = require('../index.js');
 
 describe('MatchManager Class', () => {
   let manager;
@@ -17,5 +17,10 @@ describe('MatchManager Class', () => {
     expect(match.getAwayTeam().getName()).toBe('Sweden');
     expect(match.getScoreAsString()).toBe('0 - 0');
     expect(manager.getMatches().length).toBe(1);
+
+    manager.endGame(match);
+
+    expect(manager.getMatches().length).toBe(0);
+    expect(match.hasEnded()).toBe(true);
   });
 });

@@ -1,10 +1,15 @@
 const { MatchManager, Team } = require("./index");
 const { timeout } = require("./utils");
+const {teams} = require("./teams");
+const TeamsService = require('./teamsService');
+const teamsService = new TeamsService(teams);
 
-async function simulateGame() {
+async function simulateGames() {
+  
+  
   const manager = new MatchManager();
-  const team1 = new Team("Norway");
-  const team2 = new Team("Sweden");
+  const team1 = new Team(teamsService.getRandomTeam());
+  const team2 = new Team(teamsService.getRandomTeam());
 
   await timeout(1000);
 
@@ -38,4 +43,4 @@ async function simulateGame() {
   console.log('Thank you for watching!')
 }
 
-simulateGame().catch(console.error);
+simulateGames().catch(console.error);

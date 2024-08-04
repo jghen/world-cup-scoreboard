@@ -1,4 +1,4 @@
-const { Match, Team } = require('../index');
+const { Match, Team } = require('../index.js');
 
 describe('Match Class', () => {
   let match;
