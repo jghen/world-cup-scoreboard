@@ -31,21 +31,18 @@ npm test
 ## Features
 
 - Start and end matches
-- Prevent teams from playing in more than one match at the same time
-- Track match scores
+- Update and track match scores
 - Retrieve summaries of all matches, sorted by total score and most recent first
+
+## Assumptions
+
+- Each team can participate in only one match at a time.
+- If a draw, the simulation randomly picks a winner and sends to the next round.
 
 ## Dependencies for testing / development
 
 - [jest](https://jestjs.io/) - testing framework
 - [nodemon](https://nodemon.io/) - Auto-detect changes and automatically restart.
-
-## Assumptions
-
-- Each team can participate in only one match at a time.
-- Matches can be started and ended.
-- The system should be able to provide a summary of matches sorted by total score and most recent first.
-- If a draw, the simulation randomly picks a winner and sends to the next round.
 
 ## Author
 
