@@ -1,4 +1,4 @@
-const { teams } = require('../teams.js');
+const { teams } = require("../teams");
 
 describe('teams module test', () => {
   test('should contain correct teams', () => {

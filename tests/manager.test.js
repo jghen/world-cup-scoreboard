@@ -1,4 +1,5 @@
-const { MatchManager, Team } = require("../index.js");
+const Team = require('../tournament/Team');
+const MatchManager = require('../tournament/MatchManager');
 
 describe("MatchManager Class", () => {
   let manager;
@@ -16,25 +17,23 @@ describe("MatchManager Class", () => {
     // Start the first match
     const match1 = manager.startGame(team1, team2);
     expect(match1).not.toBeNull();
-    expect(manager.getMatches().length).toBe(1);
+    expect(manager.getCurrentMatches().length).toBe(1);
     expect(team1.isPlaying()).toBe(true);
     expect(team2.isPlaying()).toBe(true);
 
     // Attempt to start a second match with one of the same teams
-    const match2 = manager.startGame(team1, team3);
-    expect(match2).toBeNull(); // Should be null because team1 is already in a match
-    expect(manager.getMatches().length).toBe(1);
+    expect(()=>manager.startGame(team1, team3)).toThrow(Error);
 
     // End the first match
     manager.endGame(match1);
-    expect(manager.getMatches().length).toBe(0);
+    expect(manager.getCurrentMatches().length).toBe(0);
     expect(team1.isPlaying()).toBe(false);
     expect(team2.isPlaying()).toBe(false);
 
     // Now starting a match with team1 should succeed
     const match3 = manager.startGame(team1, team4);
     expect(match3).not.toBeNull();
-    expect(manager.getMatches().length).toBe(1);
+    expect(manager.getCurrentMatches().length).toBe(1);
     expect(team1.isPlaying()).toBe(true);
     expect(team4.isPlaying()).toBe(true);
   });
@@ -47,28 +46,27 @@ describe("MatchManager Class", () => {
     expect(match.getHomeTeam().getName()).toBe("Norway");
     expect(match.getAwayTeam().getName()).toBe("Sweden");
     expect(match.getScoreAsString()).toBe("0 - 0");
-    expect(manager.getMatches().length).toBe(1);
+    expect(manager.getCurrentMatches().length).toBe(1);
 
     manager.endGame(match);
 
-    expect(manager.getMatches().length).toBe(0);
+    expect(manager.getCurrentMatches().length).toBe(0);
     expect(match.hasEnded()).toBe(true);
   });
 
   test("should manage multiple matches", () => {
-    console.log("-------------------");
     const team1 = new Team("France");
     const team2 = new Team("Germany");
     const match1 = manager.startGame(team1, team2);
-    expect(manager.getMatches().length).toBe(1);
+    expect(manager.getCurrentMatches().length).toBe(1);
 
     const team3 = new Team("Spain");
     const team4 = new Team("Italy");
     const match2 = manager.startGame(team3, team4);
-    expect(manager.getMatches().length).toBe(2);
+    expect(manager.getCurrentMatches().length).toBe(2);
 
     manager.endGame(match1);
-    expect(manager.getMatches().length).toBe(1);
+    expect(manager.getCurrentMatches().length).toBe(1);
   });
 
   test("should return matches sorted by total score and most recent first", () => {
@@ -85,9 +83,10 @@ describe("MatchManager Class", () => {
 
     const summary = manager.getSummary();
 
-    console.log("Summary:", summary); // For debugging
-
-    expect(summary).toEqual(["Spain 2 - 2 Germany", "Brazil 1 - 0 Argentina"]);
+    expect(summary).toEqual([
+      "Spain 2 - 2 Germany", 
+      "Brazil 1 - 0 Argentina"
+    ]);
   });
 
   test("should handle no matches", () => {
@@ -109,8 +108,9 @@ describe("MatchManager Class", () => {
 
     const summary = manager.getSummary();
 
-    console.log("Summary:", summary); // For debugging
-
-    expect(summary).toEqual(["Brazil 2 - 2 Argentina", "Spain 2 - 2 Germany"]);
+    expect(summary).toEqual([
+      "Brazil 2 - 2 Argentina",
+      "Spain 2 - 2 Germany"
+    ]);
   });
 });

@@ -1,4 +1,4 @@
-const { Score } = require("../index.js");
+const Score = require("../tournament/Score");
 
 describe("Score Class", () => {
   test("should initialize with 0-0 score", () => {
@@ -12,7 +12,7 @@ describe("Score Class", () => {
     expect(score.asString()).toBe("2 - 3");
     expect(score.asObject()).toEqual({ home: 2, away: 3 });
   });
-  
+
   test("should increment home score by 1", () => {
     const score = new Score();
     score.incrementHome();

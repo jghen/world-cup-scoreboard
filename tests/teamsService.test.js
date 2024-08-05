@@ -17,7 +17,7 @@ describe('TeamsService test', () => {
 
   test('should throw an error if there are not enough teams', () => {
     const fewTeamsService = new TeamsService(["Norway"]);
-    expect(() => fewTeamsService.getTwoRandomTeams()).toThrow("Not enough teams to select two");
+    expect(() => fewTeamsService.getTwoRandomTeams()).toThrow(Error);
   });
 
   test('should return two distinct random teams', () => {

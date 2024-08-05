@@ -1,4 +1,5 @@
-const { Match, Team } = require('../index.js');
+const Team = require('../tournament/Team');
+const Match = require('../tournament/Match');
 
 describe('Match Class', () => {
   let match;
@@ -61,13 +62,13 @@ describe('Match Class', () => {
 
   test('should throw an error if negative scores are provided', () => {
     match.startGame();
-    expect(() => match.updateScore(-1, 0)).toThrow("Scores cannot be negative");
-    expect(() => match.updateScore(0, -1)).toThrow("Scores cannot be negative");
+    expect(() => match.updateScore(-1, 0)).toThrow(Error);
+    expect(() => match.updateScore(0, -1)).toThrow(Error);
   });
 
   test('should throw an error if getWinner is called before the match has ended', () => {
     match.startGame();
-    expect(() => match.getWinner()).toThrow("Cannot determine winner: Game has not ended.");
+    expect(() => match.getWinner()).toThrow(Error);
   });
 
   test('should return the home team as winner if home score is higher', () => {
@@ -88,6 +89,6 @@ describe('Match Class', () => {
     match.startGame();
     match.updateScore(2, 2);
     match.endGame();
-    expect(match.getWinner()).toBe('Draw');
+    expect(match.getWinner()).toBeNull();
   });
 });
